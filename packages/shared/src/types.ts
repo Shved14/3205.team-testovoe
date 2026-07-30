@@ -48,7 +48,7 @@ export type JobDetail = JobSummary & {
 };
 
 export type CreateJobResponse = {
-  id: string;
+  jobId: string;
 };
 
 export type JobListResponse = {
@@ -59,8 +59,9 @@ export type JobListResponse = {
 };
 
 export type CancelJobResponse = {
-  id: string;
+  jobId: string;
   status: JobStatus;
+  cancelledUrls: number;
 };
 
 export type ApiErrorBody = {
