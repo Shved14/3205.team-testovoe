@@ -27,4 +27,8 @@ export class JobRuntimeRegistry {
   size(): number {
     return this.runtimes.size;
   }
+
+  jobIds(): string[] {
+    return [...this.runtimes.keys()];
+  }
 }

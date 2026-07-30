@@ -315,6 +315,16 @@ export class JobStore {
     return this.jobs.size;
   }
 
+  countActive(): number {
+    let active = 0;
+    for (const job of this.jobs.values()) {
+      if (job.status === 'pending' || job.status === 'running') {
+        active += 1;
+      }
+    }
+    return active;
+  }
+
   private requireJob(id: string): JobEntity {
     const job = this.jobs.get(id);
     if (job === undefined) {

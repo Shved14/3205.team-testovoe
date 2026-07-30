@@ -7,9 +7,10 @@ import type { SleepService } from '../common/sleep.service';
 import type { AppLogger } from './app-logger';
 import type { UrlItemEntity } from './job.entity';
 import type { JobRuntimeRegistry } from './job-runtime-registry';
+import { areAllUrlsTerminal } from './job-stats';
 import type { JobStore } from './job-store';
 import type { JobsConfig } from './jobs-config';
-import { isTerminalUrlStatus } from './job-transitions';
+import { isTerminalJobStatus, isTerminalUrlStatus } from './job-transitions';
 
 const INTERNAL_ERROR_MESSAGE_MAX_LENGTH = 300;
 
@@ -81,7 +82,7 @@ export class JobRunner {
     }
   }
 
-  cancel(jobId: string): void {
+  cancel(jobId: string): { cancelledUrls: number } {
     const runtime = this.registry.get(jobId);
     if (runtime !== undefined) {
       runtime.claimController.abort();
@@ -92,19 +93,24 @@ export class JobRunner {
 
     const job = this.store.getById(jobId);
     if (job === undefined) {
-      return;
+      return { cancelledUrls: 0 };
     }
 
+    let cancelledUrls = 0;
     if (job.status === 'pending' || job.status === 'running') {
-      this.store.requestCancel(jobId);
+      cancelledUrls = this.store.requestCancel(jobId).cancelledUrls;
     }
 
-    if (runtime === undefined && job.status === 'pending') {
-      const cancelled = this.store.getById(jobId);
-      if (cancelled !== undefined && cancelled.status === 'pending') {
-        this.store.finalize(jobId);
-      }
+    const current = this.store.getById(jobId);
+    if (
+      current !== undefined &&
+      !isTerminalJobStatus(current.status) &&
+      areAllUrlsTerminal(current.items)
+    ) {
+      this.store.finalize(jobId);
     }
+
+    return { cancelledUrls };
   }
 
   private async processOne(
