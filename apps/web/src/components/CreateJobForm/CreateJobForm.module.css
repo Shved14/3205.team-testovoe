@@ -1,0 +1,148 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.textareaWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 14px;
+  resize: vertical;
+  background: #fff;
+  color: #333;
+}
+
+.textarea:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #666;
+}
+
+.errorList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  background: #fff0f0;
+  border: 1px solid #ffcccc;
+  border-radius: 4px;
+}
+
+.errorItem {
+  font-size: 13px;
+  color: #cc0000;
+}
+
+.errorLine {
+  font-weight: 600;
+}
+
+.errorMessage {
+  color: #cc0000;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.counter {
+  font-size: 14px;
+  color: #666;
+}
+
+.submitButton {
+  padding: 8px 16px;
+  background: #0066cc;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #0052a3;
+}
+
+.submitButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.createError {
+  padding: 8px 12px;
+  background: #fff0f0;
+  border: 1px solid #ffcccc;
+  border-radius: 4px;
+  color: #cc0000;
+  font-size: 14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .textarea {
+    background: #2a2a2a;
+    color: #fff;
+    border-color: #555;
+  }
+
+  .textarea:disabled {
+    background: #1a1a1a;
+  }
+
+  .textarea:focus {
+    border-color: #888;
+  }
+
+  .errorList {
+    background: #2a1a1a;
+    border-color: #553333;
+  }
+
+  .errorItem {
+    color: #ff6666;
+  }
+
+  .errorMessage {
+    color: #ff6666;
+  }
+
+  .counter {
+    color: #aaa;
+  }
+
+  .submitButton {
+    background: #0088ff;
+  }
+
+  .submitButton:hover:not(:disabled) {
+    background: #0066cc;
+  }
+
+  .submitButton:disabled {
+    background: #555;
+  }
+
+  .createError {
+    background: #2a1a1a;
+    border-color: #553333;
+    color: #ff6666;
+  }
+}

@@ -1,0 +1,112 @@
+.item {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+  background: #fff;
+}
+
+.item:hover {
+  background: #f5f5f5;
+  border-color: #bbb;
+}
+
+.item:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+.active {
+  border-color: #0066cc;
+  background: #f0f7ff;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.id {
+  font-family: monospace;
+  font-size: 13px;
+  color: #666;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+.id:hover {
+  color: #0066cc;
+}
+
+.date {
+  font-size: 12px;
+  color: #999;
+}
+
+.statusRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusBadge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+}
+
+.stat {
+  font-size: 12px;
+  color: #666;
+}
+
+@media (prefers-color-scheme: dark) {
+  .item {
+    background: #2a2a2a;
+    border-color: #444;
+  }
+
+  .item:hover {
+    background: #333;
+    border-color: #555;
+  }
+
+  .item:focus {
+    border-color: #0088ff;
+    box-shadow: 0 0 0 2px rgba(0, 136, 255, 0.2);
+  }
+
+  .active {
+    border-color: #0088ff;
+    background: #1a2a3a;
+  }
+
+  .id {
+    color: #aaa;
+  }
+
+  .id:hover {
+    color: #0088ff;
+  }
+
+  .date {
+    color: #777;
+  }
+
+  .stat {
+    color: #aaa;
+  }
+}

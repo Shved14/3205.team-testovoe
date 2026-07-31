@@ -1,3 +1,7 @@
+import { createJobsStore } from './jobs-store';
+
+export const jobsStore = createJobsStore();
+
 export {
   createJobsStore,
   hasNonTerminalJobs,
@@ -19,3 +23,4 @@ export {
   selectIsTerminalStatus,
   selectProgress,
 } from './selectors';
+export { isTerminalJobStatus as selectIsTerminalJobStatus } from './jobs-store';

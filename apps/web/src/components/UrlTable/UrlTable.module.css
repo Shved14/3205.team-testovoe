@@ -1,0 +1,187 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.headerUrl,
+.headerStatus,
+.headerCode,
+.headerError,
+.headerDuration,
+.headerTime {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+  font-weight: 600;
+  color: #333;
+  background: #f9f9f9;
+}
+
+.headerUrl {
+  width: 40%;
+}
+
+.headerStatus {
+  width: 15%;
+}
+
+.headerCode {
+  width: 10%;
+}
+
+.headerError {
+  width: 20%;
+}
+
+.headerDuration {
+  width: 10%;
+}
+
+.headerTime {
+  width: 15%;
+}
+
+.row {
+  border-bottom: 1px solid #eee;
+}
+
+.row:hover {
+  background: #f5f5f5;
+}
+
+.cellUrl,
+.cellStatus,
+.cellCode,
+.cellError,
+.cellDuration,
+.cellTime {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.cellUrl {
+  font-family: monospace;
+  font-size: 12px;
+  word-break: break-all;
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cellCode {
+  font-family: monospace;
+  text-align: center;
+}
+
+.cellError {
+  font-size: 12px;
+  color: #cc0000;
+}
+
+.cellDuration,
+.cellTime {
+  font-size: 12px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+.pageButton {
+  padding: 6px 12px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #333;
+}
+
+.pageButton:hover:not(:disabled) {
+  background: #f5f5f5;
+  border-color: #bbb;
+}
+
+.pageButton:disabled {
+  background: #f9f9f9;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  font-size: 13px;
+  color: #666;
+}
+
+@media (prefers-color-scheme: dark) {
+  .headerUrl,
+  .headerStatus,
+  .headerCode,
+  .headerError,
+  .headerDuration,
+  .headerTime {
+    color: #fff;
+    background: #333;
+    border-bottom-color: #555;
+  }
+
+  .row {
+    border-bottom-color: #333;
+  }
+
+  .row:hover {
+    background: #333;
+  }
+
+  .cellUrl,
+  .cellStatus,
+  .cellCode,
+  .cellError,
+  .cellDuration,
+  .cellTime {
+    border-bottom-color: #333;
+  }
+
+  .cellError {
+    color: #ff6666;
+  }
+
+  .cellDuration,
+  .cellTime {
+    color: #aaa;
+  }
+
+  .pageButton {
+    background: #333;
+    border-color: #555;
+    color: #fff;
+  }
+
+  .pageButton:hover:not(:disabled) {
+    background: #444;
+    border-color: #666;
+  }
+
+  .pageButton:disabled {
+    background: #2a2a2a;
+    color: #777;
+  }
+
+  .pageInfo {
+    color: #aaa;
+  }
+}

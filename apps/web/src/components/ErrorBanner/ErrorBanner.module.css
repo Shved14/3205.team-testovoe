@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #fff0f0;
+  border: 1px solid #ffcccc;
+  border-radius: 4px;
+  color: #cc0000;
+}
+
+.message {
+  flex: 1;
+  font-size: 14px;
+}
+
+.dismissButton {
+  padding: 0;
+  background: none;
+  border: none;
+  color: #cc0000;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.dismissButton:hover {
+  background: #ffcccc;
+}
+
+@media (prefers-color-scheme: dark) {
+  .container {
+    background: #2a1a1a;
+    border-color: #553333;
+    color: #ff6666;
+  }
+
+  .message {
+    color: #ff6666;
+  }
+
+  .dismissButton {
+    color: #ff6666;
+  }
+
+  .dismissButton:hover {
+    background: #553333;
+  }
+}
