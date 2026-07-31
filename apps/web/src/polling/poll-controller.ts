@@ -8,17 +8,26 @@ export type PollTick = (
   generation: number,
 ) => Promise<TickResult>;
 
-const BASE_INTERVAL_MS = 1000;
-const MAX_BACKOFF_MS = 8000;
+export type PollControllerOptions = {
+  intervalMs?: number;
+  maxBackoffMs?: number;
+};
+
+const DEFAULT_INTERVAL_MS = 1000;
+const DEFAULT_MAX_BACKOFF_MS = 8000;
 const MAX_CONSECUTIVE_FAILURES = 5;
 
-export function computePollBackoffMs(consecutiveFailures: number): number {
+export function computePollBackoffMs(
+  consecutiveFailures: number,
+  intervalMs: number = DEFAULT_INTERVAL_MS,
+  maxBackoffMs: number = DEFAULT_MAX_BACKOFF_MS,
+): number {
   const exponent = Math.max(0, consecutiveFailures - 1);
-  return Math.min(BASE_INTERVAL_MS * 2 ** exponent, MAX_BACKOFF_MS);
+  return Math.min(intervalMs * 2 ** exponent, maxBackoffMs);
 }
 
 export class PollController {
-  private generation = 0;
+  private _generation = 0;
   private jobId: string | null = null;
   private tick: PollTick | null = null;
   private timer: ReturnType<typeof setTimeout> | null = null;
@@ -26,6 +35,17 @@ export class PollController {
   private consecutiveFailures = 0;
   private paused = false;
   private errored = false;
+  private readonly intervalMs: number;
+  private readonly maxBackoffMs: number;
+
+  constructor(options: PollControllerOptions = {}) {
+    this.intervalMs = options.intervalMs ?? DEFAULT_INTERVAL_MS;
+    this.maxBackoffMs = options.maxBackoffMs ?? DEFAULT_MAX_BACKOFF_MS;
+  }
+
+  get generation(): number {
+    return this._generation;
+  }
 
   get hasError(): boolean {
     return this.errored;
@@ -36,7 +56,7 @@ export class PollController {
   }
 
   isCurrentGeneration(generation: number): boolean {
-    return generation === this.generation;
+    return generation === this._generation;
   }
 
   start(jobId: string, tick: PollTick): void {
@@ -46,13 +66,22 @@ export class PollController {
     this.paused = false;
     this.jobId = jobId;
     this.tick = tick;
-    this.generation += 1;
-    this.schedule(0, this.generation);
+    this._generation += 1;
+    this.schedule(0, this._generation);
   }
 
   stop(): void {
     this.clearActivePoll({ bumpGeneration: true, abortInFlight: true });
     this.paused = false;
+  }
+
+  /** Schedules an immediate tick without bumping generation (e.g. after cancel). */
+  requestTick(): void {
+    if (this.jobId === null || this.tick === null || this.errored || this.paused) {
+      return;
+    }
+    this.clearTimer();
+    this.schedule(0, this._generation);
   }
 
   pause(): void {
@@ -67,7 +96,7 @@ export class PollController {
 
     this.paused = false;
     this.clearTimer();
-    this.schedule(0, this.generation);
+    this.schedule(0, this._generation);
   }
 
   private clearActivePoll(options: {
@@ -75,7 +104,7 @@ export class PollController {
     abortInFlight: boolean;
   }): void {
     if (options.bumpGeneration) {
-      this.generation += 1;
+      this._generation += 1;
     }
 
     if (options.abortInFlight) {
@@ -96,7 +125,7 @@ export class PollController {
   }
 
   private schedule(delayMs: number, generation: number): void {
-    if (this.paused || this.jobId === null || generation !== this.generation) {
+    if (this.paused || this.jobId === null || generation !== this._generation) {
       return;
     }
 
@@ -109,7 +138,7 @@ export class PollController {
 
   private async runTick(generation: number): Promise<void> {
     if (
-      generation !== this.generation ||
+      generation !== this._generation ||
       this.paused ||
       this.jobId === null ||
       this.tick === null
@@ -136,7 +165,7 @@ export class PollController {
       }
 
       this.consecutiveFailures = 0;
-      this.schedule(BASE_INTERVAL_MS, generation);
+      this.schedule(this.intervalMs, generation);
     } catch (error) {
       if (!this.isCurrentGeneration(generation)) {
         return;
@@ -144,7 +173,7 @@ export class PollController {
 
       if (isAbortError(error)) {
         if (!this.paused && this.jobId !== null) {
-          this.schedule(BASE_INTERVAL_MS, generation);
+          this.schedule(this.intervalMs, generation);
         }
         return;
       }
@@ -156,7 +185,10 @@ export class PollController {
         return;
       }
 
-      this.schedule(computePollBackoffMs(this.consecutiveFailures), generation);
+      this.schedule(
+        computePollBackoffMs(this.consecutiveFailures, this.intervalMs, this.maxBackoffMs),
+        generation,
+      );
     } finally {
       if (this.inFlight === controller) {
         this.inFlight = null;
